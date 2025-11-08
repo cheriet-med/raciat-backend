@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system dependencies including Tesseract
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-all \
@@ -16,8 +16,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Accept SECRET_KEY as build argument
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
+
 COPY . .
 
+# Collect static files (now SECRET_KEY is set)
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
