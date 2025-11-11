@@ -1,15 +1,13 @@
 {% load i18n %}
 
 {% block subject %} 
-{% blocktrans %}email Successfully Updated | Goamico {% endblocktrans %}
+{% blocktrans %}تم تحديث البريد الإلكتروني بنجاح | راسيات{% endblocktrans %}
 {% endblock subject %}
 
 {% block text_body %}
 {% block content %}
-<p>Hello {{ user.full_name }},</p>
-<p>This is a confirmation that your email on Goamico has been successfully changed to <strong>{{ user.email }}</strong>.</p>
-<p>If you didn't make this change, please contact our support team immediately.</p>
+<p>مرحبًا {{ user.full_name }},</p>
+<p>هذه رسالة تأكيد بأن بريدك الإلكتروني من راسيات قد تم تغييره بنجاح إلى <strong>{{ user.email }}</strong>.</p>
+<p>إذا لم تقم بهذا التغيير، يرجى التواصل فورًا مع فريق الدعم لدينا.</p>
 {% endblock %}
 {% endblock html_body %}
-
-

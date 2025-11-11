@@ -247,21 +247,6 @@ DJOSER = {
         'http://localhost:3000/api/auth/callback/google',
         'http://localhost:3000/api/auth/callback/facebook',
 
-        # Production (NextAuth)
-        'https://goamico.com/api/auth/callback/google',
-        'https://goamico.com/api/auth/callback/facebook',
-        'https://www.goamico.com/api/auth/callback/google',
-        'https://www.goamico.com/api/auth/callback/facebook',
-
-        # API subdomain
-        'https://api.goamico.com/api/auth/callback/google',
-        'https://api.goamico.com/api/auth/callback/facebook',
-
-        # Django OAuth endpoints (direct login)
-        'http://localhost:3000/auth/o/google-oauth2/',
-        'http://localhost:3000/auth/o/facebook/',
-        'https://api.goamico.com/auth/o/google-oauth2/',
-        'https://api.goamico.com/auth/o/facebook/',
     ],
     'SERIALIZERS': {
         'user_create': 'padlevap.serializers.UserCreateSerializer',
@@ -333,11 +318,7 @@ pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://api.goamico.com',
-    'https://goamico.com',
-    'https://www.goamico.com',
-]
+CSRF_TRUSTED_ORIGINS = []
 
 # Also ensure CSRF protection is properly configured
 CSRF_COOKIE_SECURE = True

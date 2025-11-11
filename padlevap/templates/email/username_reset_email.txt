@@ -1,15 +1,15 @@
 {% load i18n %}
 {% autoescape off %}
-Hello,
+مرحبًا،
 
-You're receiving this email because you requested to recover your username for your account at {{ site_name }}.
+لقد استلمت هذه الرسالة لأنك طلبت استعادة اسم المستخدم الخاص بحسابك في {{ site_name }}.
 
-Your username is: {{ user.get_username }}
+اسم المستخدم الخاص بك هو: {{ user.get_username }}
 
-If you didn't request this, please ignore this email.
+إذا لم تطلب ذلك، يرجى تجاهل هذه الرسالة.
 
-Thanks,
-The {{ site_name }} Team
+شكرًا لك،  
+فريق راسيات
 
-Need help? Contact us at {{ support_email }}
+هل تحتاج إلى مساعدة؟ تواصل معنا عبر {{ support_email }}
 {% endautoescape %}

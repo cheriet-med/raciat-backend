@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Email Verification Failed</title>
+    <title>فشل التحقق من البريد الإلكتروني</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -15,16 +15,15 @@
 <body>
     <div class="container">
         <div class="error-icon">✗</div>
-        <h1>Verification Failed</h1>
-        <p>The verification link is invalid or has expired. This could happen if:</p>
+        <h1>فشل التحقق</h1>
+        <p>رابط التحقق غير صالح أو انتهت صلاحيته. قد يحدث هذا إذا:</p>
         <ul style="text-align: left; display: inline-block;">
-            <li>The link has been used already</li>
-            <li>The link has expired (valid for 24 hours)</li>
-            <li>The link was copied incorrectly</li>
+            <li>تم استخدام الرابط بالفعل</li>
+            <li>انتهت صلاحية الرابط (صالح لمدة 24 ساعة)</li>
+            <li>تم نسخ الرابط بشكل غير صحيح</li>
         </ul>
         <div>
-            <a href="{% url 'resend_verification' %}" class="btn">Request New Verification Email</a>
-            
+            <a href="{% url 'resend_verification' %}" class="btn">طلب إعادة إرسال بريد التحقق</a>
         </div>
     </div>
 </body>

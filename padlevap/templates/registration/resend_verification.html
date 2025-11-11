@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Resend Verification Email</title>
+    <title>إعادة إرسال بريد التحقق</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -21,8 +21,8 @@
 </head>
 <body>
     <div class="container">
-        <h2>Resend Verification Email</h2>
-        <p>Enter your email address to receive a new verification link.</p>
+        <h2>إعادة إرسال بريد التحقق</h2>
+        <p>أدخل عنوان بريدك الإلكتروني لتلقي رابط التحقق الجديد.</p>
         
         {% if messages %}
             <div class="messages">
@@ -35,10 +35,10 @@
         <form method="post">
            
             <div class="form-group">
-                <label for="email">Email Address:</label>
+                <label for="email">البريد الإلكتروني:</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            <button type="submit" class="btn">Send Verification Email</button>
+            <button type="submit" class="btn">إرسال بريد التحقق</button>
         </form>
         
       
