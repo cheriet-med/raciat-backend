@@ -407,9 +407,7 @@ class ProductGlobal(mixins.ListModelMixin,
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter] # Ensure this is correct
     #filterset_fields = ['category']  # Exact match filtering
-    filterset_fields = {
-        'category','user', 'name', 'price_per_night', 'types', 'average_cost', 'id'  # Allows searching multiple names
-    }
+    #filterset_fields = {}
   
     search_fields = []  # Removed category, new_price, stock
 
