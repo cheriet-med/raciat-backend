@@ -143,15 +143,11 @@ class EmailLetter(models.Model):
 
 class Post(models.Model):
     url= models.CharField(max_length=1000,blank=True, null=True)
-    image_en = CloudinaryField('images', blank=True, null=True)
-    image_ar = CloudinaryField('images', blank=True, null=True)
+    image = CloudinaryField('images', blank=True, null=True)
     title = models.CharField(max_length=1000,blank=True, null=True)
     description = models.CharField(max_length=1000,blank=True, null=True)
     content = models.CharField(max_length=10000,blank=True, null=True)
     image_owner = CloudinaryField('images', blank=True, null=True)
-    date = models.CharField(max_length=500,blank=True, null=True)
-    time = models.CharField(max_length=500,blank=True, null=True)
-    licence = models.CharField(max_length=10000,blank=True, null=True)
     owner = models.CharField(max_length=1000,blank=True, null=True)
     created_at_meta = models.CharField(max_length=50, blank=True)
     updated_at_meta = models.CharField(max_length=50, blank=True)
