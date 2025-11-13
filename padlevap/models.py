@@ -142,7 +142,7 @@ class EmailLetter(models.Model):
 
 
 class Post(models.Model):
-    url= models.CharField(max_length=1000,blank=True, null=True)
+    user = models.ForeignKey(UserAccount, related_name='Blog', on_delete=models.CASCADE)
     image = CloudinaryField('images', blank=True, null=True)
     title = models.CharField(max_length=1000,blank=True, null=True)
     description = models.CharField(max_length=1000,blank=True, null=True)
