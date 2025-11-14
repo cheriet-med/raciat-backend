@@ -600,7 +600,7 @@ class AwardsGlobal(mixins.ListModelMixin,
                 filter_backends = [DjangoFilterBackend, SearchFilter] # Ensure this is correct
                 #filterset_fields = ['category']  # Exact match filtering
                 filterset_fields = {
-                'product', 'id', 'name', 'year' # Allows searching multiple names
+                'product', 'id', 'rooms', 'badrbadroomes' # Allows searching multiple names
                 }
 
                 def post(self, request, *args, **kwargs):
