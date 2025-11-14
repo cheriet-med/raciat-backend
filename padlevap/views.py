@@ -90,7 +90,7 @@ class AmenitiesPostGlobal(mixins.ListModelMixin,
                 serializer_class = AmenitiesSerializer
                 filter_backends = [DjangoFilterBackend, SearchFilter] # Ensure this is correct
                 #filterset_fields = ['categoty']  # Exact match filtering
-                filterset_fields = ['categoty','user', 'name', 'id']
+                filterset_fields = ['categoty','product', 'name', 'id']
 
                 def post(self, request, *args, **kwargs):
                     return self.create(request, *args, **kwargs)
