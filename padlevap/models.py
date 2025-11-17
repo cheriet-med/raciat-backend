@@ -378,8 +378,14 @@ class Order(models.Model):
     description = models.CharField(max_length=500,blank=True, null=True)
     representative = models.CharField(max_length=500,blank=True, null=True)
     potential_client = models.CharField(max_length=500,blank=True, null=True)
-
-
+    types = models.CharField(max_length=500,blank=True, null=True)
+    min_price = models.CharField(max_length=500,blank=True, null=True)
+    max_price = models.CharField(max_length=500,blank=True, null=True)
+    badrooms_number = models.CharField(max_length=500,blank=True, null=True)
+    rooms_number = models.CharField(max_length=500,blank=True, null=True)
+    region = models.CharField(max_length=500,blank=True, null=True)
+    location = models.CharField(max_length=500,blank=True, null=True)
+    is_read = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order #{self.id}"
@@ -493,9 +499,10 @@ class ScheduledEmail(models.Model):
 
 class test(models.Model):
 
-    title = models.CharField(max_length=200)  # assuming you have a title field
-    image_en = CloudinaryField('images', blank=True, null=True)
-    
+    name = models.CharField(max_length=200)  # assuming you have a title field
+    phone_number = models.CharField(max_length=200)
+    date = models.CharField(max_length=200)
+    is_read = models.BooleanField(default=False)
 
 
 
