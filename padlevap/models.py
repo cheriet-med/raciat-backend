@@ -387,6 +387,7 @@ class Order(models.Model):
     region = models.CharField(max_length=500,blank=True, null=True)
     location = models.CharField(max_length=500,blank=True, null=True)
     is_read = models.BooleanField(default=False)
+    phone = models.CharField(max_length=500,blank=True, null=True)
 
     def __str__(self):
         return f"Order #{self.id}"
