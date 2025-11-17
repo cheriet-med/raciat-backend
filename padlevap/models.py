@@ -363,6 +363,7 @@ class ReviewScore(models.Model):
 class Order(models.Model):
 
     user = models.ForeignKey(UserAccount, related_name='user_orders', on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,blank=True, null=True)
     status = models.CharField(max_length=500,blank=True, null=True)
     created_at = models.CharField(max_length=500,blank=True, null=True)
     updated_at = models.CharField(max_length=500,blank=True, null=True)
