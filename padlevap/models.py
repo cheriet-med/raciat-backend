@@ -206,7 +206,7 @@ class Product(models.Model):
 
 class Amenities(models.Model):
 
-    product = models.ForeignKey(Product, related_name='Amenities', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='Amenities', on_delete=models.CASCADE, null=True, blank=True)
     amenitie = models.CharField(max_length=1000, blank=True, null=True)
     name = models.CharField(max_length=1000, blank=True, null=True)
     categoty = models.CharField(max_length=1000, blank=True, null=True)
@@ -367,7 +367,7 @@ class Order(models.Model):
     status = models.CharField(max_length=500,blank=True, null=True)
     created_at = models.CharField(max_length=500,blank=True, null=True)
     updated_at = models.CharField(max_length=500,blank=True, null=True)
-    image =  CloudinaryField('images')
+    image = CloudinaryField('images', blank=True, null=True)
     address = models.CharField(max_length=500,blank=True, null=True)
     reason = models.CharField(max_length=500,blank=True, null=True)
     price = models.CharField(max_length=500,blank=True, null=True)
