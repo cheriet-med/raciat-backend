@@ -53,7 +53,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     language = models.CharField(max_length=1000, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longtitude = models.FloatField(blank=True, null=True) 
-    joined = models.DateTimeField(auto_now_add=True, null=True)
+    joined = models.CharField(max_length=1000, blank=True, null=True)
     types = models.CharField(max_length=1000, blank=True, null=True)
     stars = models.CharField(max_length=1000, blank=True, null=True)
 
