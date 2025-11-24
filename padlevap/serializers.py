@@ -10,19 +10,37 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 import re
 
-
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = UserAccount
-        fields = ('id', 'email', 'password', 'full_name')  # no is_partner, no is_staff
-
+        fields = ('id', 'email', 'password')
+    
     def create(self, validated_data):
-        request = self.context.get('request')
-        if request and request.data.get('register_as') == 'partner':
-            validated_data['is_staff'] = True
-        else:
-            validated_data['is_staff'] = False
-        return super().create(validated_data)
+        try:
+            request = self.context.get('request')
+            if request and request.data.get('register_as') == 'partner':
+                validated_data['is_staff'] = True
+            else:
+                validated_data['is_staff'] = False
+            
+            # Remove password from validated_data
+            password = validated_data.pop('password')
+            
+            # Create user using the manager
+            user = UserAccount.objects.create_user(
+                email=validated_data['email'],
+                password=password,
+                is_staff=validated_data.get('is_staff', False)
+            )
+            
+            return user
+            
+        except Exception as e:
+            import traceback
+            print(f"FULL ERROR: {traceback.format_exc()}")
+            print(f"ERROR TYPE: {type(e)}")
+            print(f"ERROR MESSAGE: {str(e)}")
+            raise
 
 
 
