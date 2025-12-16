@@ -61,7 +61,8 @@ urlpatterns = [
    path('test/', testReview.as_view(), name='test'),
    path('testid/<int:pk>', testReviewid.as_view()),
 
-
+   path('homepage/', homepageglobal.as_view(), name='homepage'),
+   path('homepageid/<int:pk>', homepageid.as_view()),
 
    path('amenities/', AmenitiesPostGlobal.as_view(), name='Amenities'),
    path('tamenitiesid/<int:pk>', Amenitiesid.as_view()),

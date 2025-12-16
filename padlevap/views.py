@@ -1924,6 +1924,55 @@ class testReviewid(APIView):
 
 
 
+# Home edit
+class homepageglobal(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
+                #authentication_classes = [TokenAuthentication]
+                #permission_classes = [IsAuthenticated]
+                queryset = home_page.objects.all()
+                serializer_class = HomePageSerializer
+                #filter_backends = [DjangoFilterBackend, SearchFilter]
+                #filterset_fields = ['product', 'user']  # Specify the fields to filter by
+
+                def post(self, request, *args, **kwargs):
+                    return self.create(request, *args, **kwargs)
+
+                def get(self, request, format=None):
+                    snippets = self.filter_queryset(self.get_queryset()).order_by('-id')
+                    serializer = HomePageSerializer(snippets, many=True)
+                    return Response(serializer.data)
+
+
+
+class homepageid(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return home_page.objects.get(pk=pk)
+        except home_page.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = HomePageSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = HomePageSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+  
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -4104,13 +4153,13 @@ def send_verification_email(request, user):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         
-        verification_link = f"https://goamico.com/en/verify/{uid}/{token}/"
+        verification_link = f"https://raciat.com/en/verify/{uid}/{token}/"
         
         subject = 'Verify Your Email Address'
         message = render_to_string('registration/verification_email.html', {
             'user': user,
             'verification_link': verification_link,
-            'site_name': "https://goamico.com/en",
+            'site_name': "https://raciat.com/en",
         })
         
         # Use send_mail with proper parameters

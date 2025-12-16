@@ -68,6 +68,11 @@ class LanguagesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class HomePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = home_page
+        fields = '__all__'
+
 
 class EmailUserSearchSerializer(serializers.ModelSerializer):
     class Meta:

@@ -190,6 +190,7 @@ class Product(models.Model):
     garages = models.CharField(max_length=1000,blank=True, null=True)
     region = models.CharField(max_length=1000,blank=True, null=True)
     is_featured = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=False)
 
 
 
@@ -505,9 +506,33 @@ class test(models.Model):
     name = models.CharField(max_length=200)  # assuming you have a title field
     phone_number = models.CharField(max_length=200)
     date = models.CharField(max_length=200)
+    listing_id = models.CharField(max_length=200, blank=True, null=True)
+    agent = models.CharField(max_length=200, blank=True, null=True)
     is_read = models.BooleanField(default=False)
 
 
+
+class home_page(models.Model):
+
+    hero_1 = CloudinaryField('images', blank=True, null=True)
+    hero_2 = CloudinaryField('images', blank=True, null=True)
+    section_features = CloudinaryField('images', blank=True, null=True)
+    awards = models.CharField(max_length=200, blank=True, null=True)
+    agents = models.CharField(max_length=200, blank=True, null=True)
+    visites = models.CharField(max_length=200, blank=True, null=True)
+    place_image_1 = CloudinaryField('images', blank=True, null=True)
+    place_title_1 = models.CharField(max_length=200, blank=True, null=True)
+    place_image_2 = CloudinaryField('images', blank=True, null=True)
+    place_title_2 = models.CharField(max_length=200, blank=True, null=True)
+    place_image_3 = CloudinaryField('images', blank=True, null=True)
+    place_title_3 = models.CharField(max_length=200, blank=True, null=True)
+    place_image_4 = CloudinaryField('images', blank=True, null=True)
+    place_title_4 = models.CharField(max_length=200, blank=True, null=True)
+    place_image_5 = CloudinaryField('images', blank=True, null=True)
+    place_title_5 = models.CharField(max_length=200, blank=True, null=True)
+    place_image_6 = CloudinaryField('images', blank=True, null=True)
+    place_title_6 = models.CharField(max_length=200, blank=True, null=True)
+    section_steps = CloudinaryField('images', blank=True, null=True)
 
 # for simple live chat 
 
