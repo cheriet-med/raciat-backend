@@ -503,9 +503,9 @@ class ScheduledEmail(models.Model):
 
 class test(models.Model):
 
-    name = models.CharField(max_length=200)  # assuming you have a title field
-    phone_number = models.CharField(max_length=200)
-    date = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True, null=True)  # assuming you have a title field
+    phone_number = models.CharField(max_length=200, blank=True, null=True)
+    date = models.CharField(max_length=200, blank=True, null=True)
     listing_id = models.CharField(max_length=200, blank=True, null=True)
     agent = models.CharField(max_length=200, blank=True, null=True)
     is_read = models.BooleanField(default=False)
