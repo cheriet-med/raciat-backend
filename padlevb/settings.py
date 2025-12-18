@@ -284,6 +284,36 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Allow credentials (optional, only enable if needed)
 CORS_ALLOW_CREDENTIALS = True
 
+
+# Domain configuration
+ALLOWED_HOSTS = [
+    'raciat.com',
+    'www.raciat.com',
+    'frontend.raciat.com',
+    'api.raciat.com',
+    'localhost',
+    '127.0.0.1',
+    'backend',
+    '0.0.0.0',
+    '*',
+]
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "https://raciat.com",
+    "https://www.raciat.com",
+    "https://frontend.raciat.com",
+    "https://api.raciat.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
+
+
+
+
 import ssl  # <-- Add this import at the top of the file
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL'),
 CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL'),
