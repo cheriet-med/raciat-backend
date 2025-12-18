@@ -3,9 +3,6 @@ from .models import *  # Replace with your model
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from django.utils.text import slugify
 import uuid
-import cloudinary.uploader
-from cloudinary.models import CloudinaryField
-from cloudinary import CloudinaryImage
 from django.conf import settings
 from django.contrib.auth import get_user_model
 import re

@@ -13,9 +13,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 import pytesseract
@@ -62,7 +59,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'djoser',
-    'cloudinary',
     'django_celery_beat',
     'django_filters',
     'social_django',
@@ -288,12 +284,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Allow credentials (optional, only enable if needed)
 CORS_ALLOW_CREDENTIALS = True
 
-cloudinary.config( 
-  cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
-  api_key = os.getenv('CLOUDINARY_API_KEY'),
-  api_secret = os.getenv('CLOUDINARY_API_SECRET'),
-
-)
 import ssl  # <-- Add this import at the top of the file
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL'),
 CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL'),

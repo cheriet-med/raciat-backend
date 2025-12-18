@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, AbstractUser
 from django.db import models
-from cloudinary.models import CloudinaryField
 from django.conf import settings
 from django.utils import timezone
 import uuid
@@ -37,7 +36,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     countryCode = models.CharField(max_length=1000, blank=True, null=True)
     phoneNumber = models.CharField(max_length=1000, blank=True, null=True)
     status = models.CharField(max_length=1000, blank=True, null=True)
-    profile_image = CloudinaryField('images', blank=True, null=True)
+    profile_image = models.ImageField(blank=True, null=True)
     username = models.CharField(max_length=1000, blank=True, null=True)
     title = models.CharField(max_length=1000, blank=True, null=True)
     identity_verified = models.BooleanField(default=False)
@@ -96,8 +95,8 @@ class Verify(models.Model):
     full_name = models.CharField(max_length=1000,blank=True, null=True)
     document_type = models.CharField(max_length=500,blank=True, null=True)
     document_number = models.CharField(max_length=500,blank=True, null=True)
-    document_photo = CloudinaryField('images', blank=True, null=True)
-    selfie_document = CloudinaryField('images', blank=True, null=True)
+    document_photo = models.ImageField(blank=True, null=True)
+    selfie_document = models.ImageField(blank=True, null=True)
     status = models.CharField(max_length=500,blank=True, null=True, default='unverified')
     date = models.CharField(max_length=500,blank=True, null=True)
     time = models.CharField(max_length=500,blank=True, null=True)
@@ -143,7 +142,7 @@ class EmailLetter(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(UserAccount, related_name='Blog', on_delete=models.CASCADE)
-    image = CloudinaryField('images', blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
     title = models.CharField(max_length=1000,blank=True, null=True)
     description = models.CharField(max_length=1000,blank=True, null=True)
     content = models.CharField(max_length=10000,blank=True, null=True)
@@ -178,7 +177,7 @@ class Product(models.Model):
     video_link = models.CharField(max_length=1000,blank=True, null=True)
     rooms_number = models.CharField(max_length=1000,blank=True, null=True)
     badrooms_number = models.CharField(max_length=1000,blank=True, null=True)
-    image = CloudinaryField('images', blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
     latitude = models.CharField(max_length=1000, blank=True, null=True)
     longtitude = models.CharField(max_length=1000, blank=True, null=True)
     location = models.CharField(max_length=1000, blank=True, null=True)
@@ -190,7 +189,7 @@ class Product(models.Model):
     garages = models.CharField(max_length=1000,blank=True, null=True)
     region = models.CharField(max_length=1000,blank=True, null=True)
     is_featured = models.BooleanField(default=False)
-    is_visible = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
 
 
 
@@ -220,7 +219,7 @@ class Amenities(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image =  CloudinaryField('images')
+    image =  models.ImageField(blank=True, null=True)
     #is_primary = models.BooleanField(default=False)  # To mark the primary image for the product
 
     def __str__(self):
@@ -245,7 +244,7 @@ class Awards(models.Model):
     product = models.ForeignKey(Product, related_name='awards', on_delete=models.CASCADE)
     rooms =  models.CharField(max_length=1000,blank=True, null=True)
     badrbadroomes =  models.CharField(max_length=1000,blank=True, null=True)
-    image =  CloudinaryField('images')
+    image =  models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return f"Awards for {self.product.name}"
@@ -317,7 +316,7 @@ class ProductReview(models.Model):
 
 class RviewsImage(models.Model):
     ProductReview = models.ForeignKey(ProductReview, related_name='Reviews_image', on_delete=models.CASCADE)
-    image =  CloudinaryField('images')
+    image =  models.ImageField(blank=True, null=True)
     #is_primary = models.BooleanField(default=False)  # To mark the primary image for the product
 
     def __str__(self):
@@ -369,7 +368,7 @@ class Order(models.Model):
     status = models.CharField(max_length=500,blank=True, null=True)
     created_at = models.CharField(max_length=500,blank=True, null=True)
     updated_at = models.CharField(max_length=500,blank=True, null=True)
-    image = CloudinaryField('images', blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
     address = models.CharField(max_length=500,blank=True, null=True)
     reason = models.CharField(max_length=500,blank=True, null=True)
     price = models.CharField(max_length=500,blank=True, null=True)
@@ -515,25 +514,25 @@ class test(models.Model):
 
 class home_page(models.Model):
 
-    hero_1 = CloudinaryField('images', blank=True, null=True)
-    hero_2 = CloudinaryField('images', blank=True, null=True)
-    section_features = CloudinaryField('images', blank=True, null=True)
+    hero_1 = models.ImageField(blank=True, null=True)
+    hero_2 = models.ImageField(blank=True, null=True)
+    section_features = models.ImageField(blank=True, null=True)
     awards = models.CharField(max_length=200, blank=True, null=True)
     agents = models.CharField(max_length=200, blank=True, null=True)
     visites = models.CharField(max_length=200, blank=True, null=True)
-    place_image_1 = CloudinaryField('images', blank=True, null=True)
+    place_image_1 = models.ImageField(blank=True, null=True)
     place_title_1 = models.CharField(max_length=200, blank=True, null=True)
-    place_image_2 = CloudinaryField('images', blank=True, null=True)
+    place_image_2 = models.ImageField(blank=True, null=True)
     place_title_2 = models.CharField(max_length=200, blank=True, null=True)
-    place_image_3 = CloudinaryField('images', blank=True, null=True)
+    place_image_3 = models.ImageField(blank=True, null=True)
     place_title_3 = models.CharField(max_length=200, blank=True, null=True)
-    place_image_4 = CloudinaryField('images', blank=True, null=True)
+    place_image_4 = models.ImageField(blank=True, null=True)
     place_title_4 = models.CharField(max_length=200, blank=True, null=True)
-    place_image_5 = CloudinaryField('images', blank=True, null=True)
+    place_image_5 = models.ImageField(blank=True, null=True)
     place_title_5 = models.CharField(max_length=200, blank=True, null=True)
-    place_image_6 = CloudinaryField('images', blank=True, null=True)
+    place_image_6 = models.ImageField(blank=True, null=True)
     place_title_6 = models.CharField(max_length=200, blank=True, null=True)
-    section_steps = CloudinaryField('images', blank=True, null=True)
+    section_steps = models.ImageField(blank=True, null=True)
 
 # for simple live chat 
 
