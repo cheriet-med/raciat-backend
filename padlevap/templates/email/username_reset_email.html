@@ -1,23 +1,23 @@
 {% load i18n %}
 
 {% block subject %}
-{% blocktrans %}إعادة تعيين اسم المستخدم في Goamico{% endblocktrans %}
+{% blocktrans %}إعادة تعيين اسم المستخدم في راسبات{% endblocktrans %}
 {% endblock subject %}
 
 {% block text_body %}
-{% blocktrans %}لقد استلمت هذه الرسالة لأنك طلبت إعادة تعيين اسم المستخدم لحسابك في Goamico.{% endblocktrans %}
+{% blocktrans %}لقد استلمت هذه الرسالة لأنك طلبت إعادة تعيين اسم المستخدم لحسابك في راسبات.{% endblocktrans %}
 
 {% trans "يرجى الانتقال إلى الصفحة التالية واختيار اسم مستخدم جديد:" %}
-{{ protocol }}://{{ domain }}/{{ url|safe }}
+https://frontend.raciat.com/{{ url|safe }}
 {% trans "اسم المستخدم الخاص بك، في حال نسيته:" %} {{ user.get_username }}
 
 {% trans "شكرًا لاستخدامك موقعنا!" %}
 
-{% blocktrans %}فريق Goamico{% endblocktrans %}
+{% blocktrans %}فريق راسبات{% endblocktrans %}
 {% endblock text_body %}
 
 {% block html_body %}
-<p>{% blocktrans %}لقد استلمت هذه الرسالة لأنك طلبت إعادة تعيين اسم المستخدم لحسابك في Goamico.{% endblocktrans %}</p>
+<p>{% blocktrans %}لقد استلمت هذه الرسالة لأنك طلبت إعادة تعيين اسم المستخدم لحسابك في راسبات.{% endblocktrans %}</p>
 
 <p>{% trans "يرجى الانتقال إلى الصفحة التالية واختيار اسم مستخدم جديد:" %}</p>
 <a href="https://frontend.raciat.com/{{ url|safe }}">https://frontend.raciat.com/{{ url|safe }}</a>
@@ -25,5 +25,5 @@
 
 <p>{% trans "شكرًا لاستخدامك موقعنا!" %}</p>
 
-<p>{% blocktrans %}فريق Goamico{% endblocktrans %}</p>
+<p>{% blocktrans %}فريق راسبات{% endblocktrans %}</p>
 {% endblock html_body %}
