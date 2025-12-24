@@ -130,6 +130,13 @@ urlpatterns = [
 
     path('health/', health_check, name='health_check'),
 
+
+
+    path('conversations/all/', get_all_conversations, name='all_conversations'),
+    path('conversations/', get_conversations_for_user, name='user_conversations'),
+    path('conversations/<int:user_id>/', get_conversations_for_user, name='specific_user_conversations'),
+    path('conversations/<int:user1_id>/<int:user2_id>/', get_conversation_between_users, name='conversation_between'),
+
 ]
 
 

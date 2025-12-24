@@ -3803,6 +3803,13 @@ class UserSearchViewSet(viewsets.ReadOnlyModelViewSet):
 
 logger = logging.getLogger(__name__)
 
+
+
+
+
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_conversations(request):
@@ -4153,13 +4160,13 @@ def send_verification_email(request, user):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         
-        verification_link = f"https://raciat.com/en/verify/{uid}/{token}/"
+        verification_link = f"https://raciat.com/verify/{uid}/{token}/"
         
         subject = 'Verify Your Email Address'
         message = render_to_string('registration/verification_email.html', {
             'user': user,
             'verification_link': verification_link,
-            'site_name': "https://raciat.com/en",
+            'site_name': "https://raciat.com/",
         })
         
         # Use send_mail with proper parameters
@@ -4571,3 +4578,253 @@ def check_phone_verification_status(request):
         'last_verified_at': verified_otp.created_at.isoformat() if verified_otp else None
     }, status=status.HTTP_200_OK)
 
+
+
+
+
+
+
+
+
+
+
+
+import logging
+from django.contrib.auth import get_user_model
+from django.db.models import Q, Max
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
+from rest_framework import status
+
+User = get_user_model()
+logger = logging.getLogger(__name__)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])  # Use TokenAuthentication instead of JWT
+@permission_classes([IsAuthenticated])  # Keep IsAuthenticated to ensure user is logged in
+def get_all_conversations(request):
+    """
+    Get all conversations for ALL users (admin only).
+    Requires TokenAuthentication and admin privileges.
+    """
+    # Check if user is admin/staff
+    if not request.user.is_staff and not request.user.is_superuser:
+        return Response(
+            {'error': 'You do not have permission to access all conversations'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        # Get all unique user pairs who have exchanged messages
+        conversations = []
+        
+        # Get all unique conversations (pairs of users who have messaged each other)
+        unique_conversations = Message.objects.values(
+            'sender', 'receiver'
+        ).distinct()
+        
+        # Process each conversation
+        for conv_data in unique_conversations:
+            sender_id = conv_data['sender']
+            receiver_id = conv_data['receiver']
+            
+            # Skip if we've already processed this pair in reverse order
+            pair_key = tuple(sorted([sender_id, receiver_id]))
+            if any(pair_key == tuple(sorted([c['sender_id'], c['receiver_id']])) for c in conversations):
+                continue
+            
+            try:
+                sender = User.objects.get(id=sender_id)
+                receiver = User.objects.get(id=receiver_id)
+                
+                # Get the latest message in this conversation
+                latest_message = Message.objects.filter(
+                    Q(sender=sender, receiver=receiver) | 
+                    Q(sender=receiver, receiver=sender)
+                ).latest('timestamp')
+                
+                # Get message count for this conversation
+                message_count = Message.objects.filter(
+                    Q(sender=sender, receiver=receiver) | 
+                    Q(sender=receiver, receiver=sender)
+                ).count()
+                
+                # Get unread count (messages from sender to receiver that are unread)
+                unread_count = Message.objects.filter(
+                    sender=sender, 
+                    receiver=receiver, 
+                    is_read=False
+                ).count()
+                
+                conversations.append({
+                    'conversation_id': f"{sender_id}_{receiver_id}",
+                    'participants': {
+                        'sender': UserSerializer(sender).data,
+                        'receiver': UserSerializer(receiver).data
+                    },
+                    'last_message': MessageSerializer(latest_message).data,
+                    'message_count': message_count,
+                    'unread_count': unread_count,
+                    'sender_id': sender_id,
+                    'receiver_id': receiver_id
+                })
+                
+            except (User.DoesNotExist, Message.DoesNotExist) as e:
+                logger.warning(f"Could not process conversation between {sender_id} and {receiver_id}: {str(e)}")
+                continue
+        
+        # Sort by latest message timestamp
+        conversations.sort(key=lambda x: x['last_message']['timestamp'], reverse=True)
+        
+        return Response({
+            'total_conversations': len(conversations),
+            'conversations': conversations
+        })
+        
+    except Exception as e:
+        logger.error(f"Error fetching all conversations: {str(e)}")
+        return Response(
+            {'error': 'Failed to fetch conversations', 'details': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_conversations_for_user(request, user_id=None):
+    """
+    Get conversations for a specific user (admin can view any user's conversations).
+    If user_id is not provided, returns current user's conversations.
+    """
+    try:
+        # Determine which user's conversations to fetch
+        if user_id:
+            # Check if requester is admin/staff
+            if not request.user.is_staff and not request.user.is_superuser and request.user.id != int(user_id):
+                return Response(
+                    {'error': 'You can only view your own conversations'},
+                    status=status.HTTP_403_FORBORIDDEN
+                )
+            target_user = User.objects.get(id=user_id)
+        else:
+            target_user = request.user
+        
+        # Get latest message for each conversation involving the target user
+        conversations_subquery = Message.objects.filter(
+            Q(sender=target_user) | Q(receiver=target_user)
+        ).values(
+            'sender', 'receiver'
+        ).annotate(
+            latest_timestamp=Max('timestamp')
+        )
+        
+        # Build conversation list with contact info
+        contacts = []
+        seen_users = set()
+        
+        for conv in conversations_subquery:
+            other_user_id = conv['receiver'] if conv['sender'] == target_user.id else conv['sender']
+            
+            if other_user_id not in seen_users:
+                try:
+                    other_user = User.objects.get(id=other_user_id)
+                    latest_message = Message.objects.filter(
+                        Q(sender=target_user, receiver=other_user) | 
+                        Q(sender=other_user, receiver=target_user)
+                    ).latest('timestamp')
+                    
+                    unread_count = Message.objects.filter(
+                        sender=other_user, 
+                        receiver=target_user, 
+                        is_read=False
+                    ).count()
+                    
+                    contacts.append({
+                        'user': UserSerializer(other_user).data,
+                        'last_message': MessageSerializer(latest_message).data,
+                        'unread_count': unread_count,
+                        'total_messages': Message.objects.filter(
+                            Q(sender=target_user, receiver=other_user) | 
+                            Q(sender=other_user, receiver=target_user)
+                        ).count()
+                    })
+                    seen_users.add(other_user_id)
+                except (User.DoesNotExist, Message.DoesNotExist):
+                    continue
+        
+        # Sort by latest message timestamp
+        contacts.sort(key=lambda x: x['last_message']['timestamp'], reverse=True)
+        
+        return Response({
+            'user': UserSerializer(target_user).data,
+            'total_conversations': len(contacts),
+            'conversations': contacts
+        })
+        
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        logger.error(f"Error fetching conversations: {str(e)}")
+        return Response({'error': 'Failed to fetch conversations'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_conversation_between_users(request, user1_id, user2_id):
+    """
+    Get specific conversation between two users.
+    Users can only view conversations they're part of, unless they're admin.
+    """
+    try:
+        # Check permissions
+        if not request.user.is_staff and not request.user.is_superuser:
+            if request.user.id not in [int(user1_id), int(user2_id)]:
+                return Response(
+                    {'error': 'You can only view conversations you are part of'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        
+        user1 = User.objects.get(id=user1_id)
+        user2 = User.objects.get(id=user2_id)
+        
+        # Get all messages between these users
+        messages = Message.objects.filter(
+            Q(sender=user1, receiver=user2) | 
+            Q(sender=user2, receiver=user1)
+        ).order_by('timestamp')
+        
+        # Mark messages as read if current user is the receiver
+        if request.user in [user1, user2]:
+            unread_messages = messages.filter(
+                receiver=request.user,
+                is_read=False
+            )
+            unread_messages.update(is_read=True)
+        
+        # Get conversation statistics
+        total_messages = messages.count()
+        unread_count = messages.filter(is_read=False).count()
+        
+        # Get latest message
+        latest_message = messages.last() if total_messages > 0 else None
+        
+        return Response({
+            'participants': {
+                'user1': UserSerializer(user1).data,
+                'user2': UserSerializer(user2).data
+            },
+            'total_messages': total_messages,
+            'messages': MessageSerializer(messages, many=True).data,
+            'latest_message': MessageSerializer(latest_message).data if latest_message else None,
+            'unread_count': unread_count
+        })
+        
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        logger.error(f"Error fetching conversation: {str(e)}")
+        return Response({'error': 'Failed to fetch conversation'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
